@@ -15,10 +15,9 @@ import static tests.utils.TestUtilities.openPlayerInfoTab;
 import static tests.utils.TestUtilities.verifyPlayerBirthDateAndAge;
 import static tests.utils.TestUtilities.verifyNavigateUp;
 
-
 public class PlayerPageTest {
 
-    // Parameters(String name, Date birthDate, String birthPlace) to be added
+    // TODO: Add parameters(String name, Date birthDate, String birthPlace) to be added
     @Test
     public void verifyInfoTab() {
         setUp();
@@ -34,9 +33,7 @@ public class PlayerPageTest {
         verifyPlayerBirthDateAndAge(expectedBirthDate);
         verifyNavigateUp();
 
-        // TODO: Make sure this assert all works
         softAssert.assertAll();
-
         tearDown();
     }
 
