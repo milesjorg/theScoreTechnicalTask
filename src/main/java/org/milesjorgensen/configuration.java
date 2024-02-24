@@ -1,2 +1,5 @@
-package org.milesjorgensen;public class configuration {
+package org.milesjorgensen;
+
+public class configuration {
+
 }

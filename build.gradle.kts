@@ -10,10 +10,11 @@ repositories {
 }
 
 dependencies {
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.assertj:assertj-core:3.25.3")
+    implementation("io.appium:java-client:9.1.0")
 }
 
 tasks.test {
-    useJUnitPlatform()
+    useJUnit()
 }

@@ -1,4 +1,4 @@
-package org.milesjorgensen;
+package tests.configuration;
 
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.options.UiAutomator2Options;
@@ -7,7 +7,7 @@ import io.appium.java_client.remote.AutomationName;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Main {
+public class AndroidDriverConfig {
 
     public static AndroidDriver initializeAndroidDriver() {
         AndroidDriver driver;
@@ -26,7 +26,4 @@ public class Main {
         return driver;
     }
 
-    public static void main(String[] args) {
-        AndroidDriver driver = initializeAndroidDriver();
-    }
 }

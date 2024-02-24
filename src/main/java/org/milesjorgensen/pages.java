@@ -1,2 +1,4 @@
-package org.milesjorgensen;public class pages {
+package org.milesjorgensen;
+
+public class pages {
 }

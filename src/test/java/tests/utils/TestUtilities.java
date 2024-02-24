@@ -1,50 +1,33 @@
-package com.tests;
+package tests.utils;
 
+import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.android.options.UiAutomator2Options;
-import io.appium.java_client.remote.AutomationName;
 import org.assertj.core.api.SoftAssertions;
 import org.openqa.selenium.By;
-import org.junit.Test;
-
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import tests.configuration.AndroidDriverConfig;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.time.Duration;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.format.DateTimeFormatter;
 
-public class AndroidTest {
+public class TestUtilities {
 
-    public void test1() {
-        //sadfljasdf
+    private static AndroidDriver driver;
+    private static WebDriverWait wait;
+    public static SoftAssertions softAssert;
+
+    public static void setUp() {
+        driver = AndroidDriverConfig.initializeAndroidDriver();
+        wait = new WebDriverWait(driver, Duration.ofSeconds(5));
+        softAssert = new SoftAssertions();
     }
 
-    public void test2() {
-        //sadfljasdf
-    }
-    @Test
-    public void androidLaunchTest() throws MalformedURLException {
-
-        UiAutomator2Options options = new UiAutomator2Options();
-        options.setPlatformName("Android");
-        options.setAutomationName(AutomationName.ANDROID_UIAUTOMATOR2);
-        options.setDeviceName("test-device");
-        options.setApp(System.getProperty("user.dir") + "/apps/theScore_ Sports News & Scores_24.2.0_Apkpure.apk");
-
-        AndroidDriver driver = new AndroidDriver(new URL("http://127.0.0.1:4723"), options);
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(4));
-        SoftAssertions softAssert = new SoftAssertions();
-
-
-
-
-
-
-        // Onboarding Flow
-        // Welcome screen
+    public static void completeOnboardingFlow() {
+        //Onboarding flow
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.fivemobile.thescore:id/txt_welcome"))).isDisplayed();
         WebElement continueBtn = driver.findElement(By.id("com.fivemobile.thescore:id/btn_primary"));
         continueBtn.click();
@@ -83,53 +66,56 @@ public class AndroidTest {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.android.permissioncontroller:id/permission_message"))).isDisplayed();
         WebElement allowNotificationsBtn = driver.findElement(By.id("com.android.permissioncontroller:id/permission_allow_button"));
         allowNotificationsBtn.click();
+    }
 
-        // Start of test
-        /*
-        Automate the following steps:
-
-        1.Open a league, team, or player page of your choice (bonus points for
-        using a data-driven or parameterized approach).
-
-        2.Verify that the expected page opens correctly.
-                Tap on a sub-tab of your choice, eg: league table / standings / leaders, or
-        stats tab of the league, team, or player.
-        3.
-
-        Verify that you are on the correct tab and that the data is displayed
-        correctly and corresponds to the league, team, or player from step 1.
-        4.
-
-        5.Verify that back navigation returns you to the previous page correctly.
-
-        */
-        // Look up team by name using search bar
+    public static void search(String name) {
         wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.fivemobile.thescore:id/search_bar_text_view"))).isDisplayed();
-        searchBar = driver.findElement(By.id("com.fivemobile.thescore:id/search_bar_text_view"));
+        WebElement searchBar = driver.findElement(By.id("com.fivemobile.thescore:id/search_bar_text_view"));
         searchBar.click();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.fivemobile.thescore:id/search_src_text"))).isDisplayed();
         searchBar = driver.findElement(By.id("com.fivemobile.thescore:id/search_src_text"));
-        // TODO: Create parameterized approach. Use an input data file? Where would that belong in file structure?
-        searchBar.sendKeys("Milwaukee Bucks");
-        searchResult = driver.findElement(By.xpath("//android.widget.TextView[@resource-id='com.fivemobile.thescore:id/txt_name' and @text='Milwaukee Bucks']"));
+        searchBar.sendKeys(name);
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[contains(@text, '" + name + "')]"))).isDisplayed();
+        WebElement searchResult = driver.findElement(By.xpath("//android.widget.TextView[contains(@text, '" + name + "')]"));
         searchResult.click();
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.fivemobile.thescore:id/team_name"))).isDisplayed();
-        String teamName = driver.findElement(By.id("com.fivemobile.thescore:id/team_name")).getAttribute("text");
-        // Verify that team names are equal
-        softAssert.assertThat("Milwaukee Bucks").isEqualTo(teamName);
+    }
 
-        // Go to stats sub-tab
-        WebElement statsTab = driver.findElement(By.xpath("//android.widget.LinearLayout[@content-desc='Team Stats']"));
-        statsTab.click();
-        // Verify stats tab was selected
-        statsTab = driver.findElement(By.xpath("//android.widget.LinearLayout[@content-desc='Team Stats']"));
-        softAssert.assertThat(statsTab.getAttribute("selected")).isEqualTo("true");
-        // TODO: How can I verify that the data corresponds to the selected team? Just check the team name again?
-        teamName = driver.findElement(By.id("com.fivemobile.thescore:id/team_name")).getAttribute("text");
-        // Verify that team names are equal
-        softAssert.assertThat("Milwaukee Bucks").isEqualTo(teamName);
+    public static void verifyNavigateUp() {
+        WebElement navigateUpBtn = driver.findElement(By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"));
+        navigateUpBtn.click();
+        // TODO: Verify this in a more resilient way
+        softAssert.assertThat(driver.findElement(By.id("com.fivemobile.thescore:id/search_src_text")).isDisplayed()).isTrue();
+    }
 
+    public static void verifyPlayerPageOpened(String name) {
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.fivemobile.thescore:id/player_header"))).isDisplayed();
+        String playerName = driver.findElement(By.id("com.fivemobile.thescore:id/txt_player_name")).getAttribute("text");
+        softAssert.assertThat(name).isEqualTo(playerName);
+    }
 
+    public static void openPlayerInfoTab() {
+        wait.until(ExpectedConditions.presenceOfElementLocated(AppiumBy.accessibilityId("Info")));
+        WebElement infoTab = driver.findElement(AppiumBy.accessibilityId("Info"));
+        infoTab.click();
+        softAssert.assertThat(infoTab.getAttribute("selected")).isEqualTo("true");
+    }
 
-        softAssert.assertAll();
+    public static void verifyPlayerBirthDateAndAge(LocalDate expectedBirthDate) {
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[@resource-id='com.fivemobile.thescore:id/title' and @text='Birth Date']")));
+        String displayedBirthDateAndAge = driver.findElement(By.xpath("//android.widget.TextView[contains(@text, 'Age')]")).getAttribute("text");
+        DateTimeFormatter birthDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate displayedBirthDate = LocalDate.parse(displayedBirthDateAndAge.substring(0, displayedBirthDateAndAge.indexOf(" (")), birthDateFormatter);
+        softAssert.assertThat(displayedBirthDate).isEqualTo(expectedBirthDate);
+        int displayedAge = Integer.parseInt(displayedBirthDateAndAge.substring(displayedBirthDateAndAge.indexOf("Age ") + 4, displayedBirthDateAndAge.indexOf(")")).trim());
+        LocalDate currentDate = LocalDate.now();
+        Period period = Period.between(displayedBirthDate, currentDate);
+        int expectedAge = period.getYears();
+        softAssert.assertThat(displayedAge).isEqualTo(expectedAge);
+    }
+
+    public static void tearDown() {
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }
