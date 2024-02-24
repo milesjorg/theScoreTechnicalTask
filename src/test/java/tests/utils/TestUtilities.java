@@ -113,6 +113,11 @@ public class TestUtilities {
         softAssert.assertThat(displayedAge).isEqualTo(expectedAge);
     }
 
+    public static void verifyPlayerBirthPlace(String expectedBirthPlace) {
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[@resource-id='com.fivemobile.thescore:id/title' and @text='Birth Place']")));
+        softAssert.assertThat(driver.findElement(By.xpath("//android.widget.TextView[@resource-id='com.fivemobile.thescore:id/value' and @text='"+expectedBirthPlace+"']")).isDisplayed()).isTrue();
+    }
+
     public static void tearDown() {
         if (driver != null) {
             driver.quit();
