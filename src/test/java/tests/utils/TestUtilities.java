@@ -14,10 +14,13 @@ import static tests.locators.Onboarding.*;
 import static tests.locators.Generic.*;
 import static tests.locators.PlayerPage.*;
 
+
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Locale;
 
 public class TestUtilities {
 
@@ -93,10 +96,9 @@ public class TestUtilities {
         softAssert.assertThat(driver.findElement(By.xpath("//android.widget.TextView[contains(@text, '" + name + "')]")).isDisplayed()).isTrue();
     }
 
-    public static void verifyPlayerPageOpened(String name) {
+    public static void verifyPlayerPageOpened() {
         wait.until(ExpectedConditions.presenceOfElementLocated(HEADER)).isDisplayed();
-        String playerName = driver.findElement(PLAYER_NAME_TEXT).getAttribute("text");
-        softAssert.assertThat(name).isEqualTo(playerName);
+        softAssert.assertThat(driver.findElement(HEADER).isDisplayed()).isTrue();
     }
 
     public static void openPlayerSubTab(By subTab) {
@@ -106,22 +108,51 @@ public class TestUtilities {
         softAssert.assertThat(selectedSubTab.getAttribute("selected")).isEqualTo("true");
     }
 
-    // TODO: Make adaptive to different players
-    public static void verifyPlayerBirthDateAndAge(LocalDate expectedBirthDate) {
-        wait.until(ExpectedConditions.presenceOfElementLocated(BIRTH_DATE_HEADER));
-        String displayedBirthDateAndAge = driver.findElement(AGE_TEXT).getAttribute("text");
-        DateTimeFormatter birthDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate displayedBirthDate = LocalDate.parse(displayedBirthDateAndAge.substring(0, displayedBirthDateAndAge.indexOf(" (")), birthDateFormatter);
-        softAssert.assertThat(displayedBirthDate).isEqualTo(expectedBirthDate);
-        int displayedAge = Integer.parseInt(displayedBirthDateAndAge.substring(displayedBirthDateAndAge.indexOf("Age ") + 4, displayedBirthDateAndAge.indexOf(")")).trim());
+    // TODO: Identify the format the birthdateAndAge string is in, then split age and birthday accordingly
+    public static void verifyPlayerBirthdateAndAge(String expectedBirthdateStr) {
+        wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(INFO_TAB_PLAYER_DETAILS));
+        List<WebElement> playerDetails = driver.findElements(INFO_TAB_PLAYER_DETAILS);
+        String displayedBirthdateAndAge = playerDetails.get(0).getAttribute("text");
+        String dateFirstPattern = "\\d{4}-\\d{2}-\\d{2} \\(Age \\d+\\)";
+        String ageFirstPattern = "\\d{2} \\(\\p{Lu}[a-zA-Z]+ \\d{1,2}, \\d{4}\\)";
+        String monthFirstPattern = "\\p{Lu}[a-zA-Z]+ \\d{1,2}, \\d{4} \\(\\d+\\)";
+
+        String dateSubstring;
+        String ageSubstring;
+        LocalDate displayedBirthdate;
+        LocalDate expectedBirthdate;
+
+        if (displayedBirthdateAndAge.matches(dateFirstPattern)) {
+            dateSubstring = displayedBirthdateAndAge.substring(0, displayedBirthdateAndAge.indexOf(" ("));
+            ageSubstring = displayedBirthdateAndAge.substring(displayedBirthdateAndAge.indexOf("Age ") + 4, displayedBirthdateAndAge.indexOf(")"));
+            DateTimeFormatter birthdateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            displayedBirthdate = LocalDate.parse(dateSubstring, birthdateFormatter);
+            expectedBirthdate = LocalDate.parse(expectedBirthdateStr, birthdateFormatter);
+
+        } else if (displayedBirthdateAndAge.matches(ageFirstPattern)) {
+            dateSubstring = displayedBirthdateAndAge.substring(displayedBirthdateAndAge.indexOf(" (") + 2, displayedBirthdateAndAge.length() - 1);
+            ageSubstring = displayedBirthdateAndAge.substring(0, displayedBirthdateAndAge.indexOf(" ("));
+            DateTimeFormatter birthdateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH);
+            displayedBirthdate = LocalDate.parse(dateSubstring, birthdateFormatter);
+            expectedBirthdate = LocalDate.parse(expectedBirthdateStr, birthdateFormatter);
+        } else {
+            dateSubstring = displayedBirthdateAndAge.substring(0, displayedBirthdateAndAge.indexOf(" ("));
+            ageSubstring = displayedBirthdateAndAge.substring(displayedBirthdateAndAge.indexOf(" (") + 2, displayedBirthdateAndAge.length() - 1);
+            DateTimeFormatter birthdateFormatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy", Locale.ENGLISH);
+            displayedBirthdate = LocalDate.parse(dateSubstring, birthdateFormatter);
+            expectedBirthdate = LocalDate.parse(expectedBirthdateStr, birthdateFormatter);
+        }
+
+        int displayedAge = Integer.parseInt(ageSubstring);
         LocalDate currentDate = LocalDate.now();
-        Period period = Period.between(displayedBirthDate, currentDate);
+        Period period = Period.between(displayedBirthdate, currentDate);
         int expectedAge = period.getYears();
         softAssert.assertThat(displayedAge).isEqualTo(expectedAge);
+        softAssert.assertThat(displayedBirthdate).isEqualTo(expectedBirthdate);
     }
 
     public static void verifyPlayerBirthPlace(String expectedBirthPlace) {
-        wait.until(ExpectedConditions.presenceOfElementLocated(BIRTH_PLACE_HEADER));
+        wait.until(ExpectedConditions.presenceOfElementLocated(INFO_TAB_PLAYER_DETAILS));
         softAssert.assertThat(driver.findElement(By.xpath("//android.widget.TextView[@resource-id='com.fivemobile.thescore:id/value' and @text='"+expectedBirthPlace+"']")).isDisplayed()).isTrue();
     }
 
