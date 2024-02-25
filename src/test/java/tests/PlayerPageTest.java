@@ -16,10 +16,11 @@ import static tests.utils.TestUtilities.tearDown;
 import static tests.utils.TestUtilities.completeOnboardingFlow;
 import static tests.utils.TestUtilities.search;
 import static tests.utils.TestUtilities.verifyPlayerPageOpened;
-import static tests.utils.TestUtilities.openPlayerInfoTab;
+import static tests.utils.TestUtilities.openPlayerSubTab;
 import static tests.utils.TestUtilities.verifyPlayerBirthDateAndAge;
 import static tests.utils.TestUtilities.verifyPlayerBirthPlace;
-import static tests.utils.TestUtilities.verifyNavigateUp;
+import static tests.utils.TestUtilities.verifyBackNavigation;
+import static tests.locators.PlayerPage.INFO_TAB;
 
 @RunWith(Parameterized.class)
 public class PlayerPageTest {
@@ -50,10 +51,10 @@ public class PlayerPageTest {
         completeOnboardingFlow();
         search(inputPlayerName);
         verifyPlayerPageOpened(inputPlayerName);
-        openPlayerInfoTab();
+        openPlayerSubTab(INFO_TAB);
         verifyPlayerBirthDateAndAge(expectedBirthDate);
         verifyPlayerBirthPlace(expectedBirthPlace);
-        verifyNavigateUp();
+        verifyBackNavigation(inputPlayerName);
 
         softAssert.assertAll();
         tearDown();

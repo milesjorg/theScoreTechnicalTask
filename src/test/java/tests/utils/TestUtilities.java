@@ -1,6 +1,5 @@
 package tests.utils;
 
-import io.appium.java_client.AppiumBy;
 import io.appium.java_client.android.AndroidDriver;
 import org.assertj.core.api.SoftAssertions;
 import org.openqa.selenium.By;
@@ -8,6 +7,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import tests.configuration.AndroidDriverConfig;
+import tests.locators.Generic;
+import tests.locators.Onboarding;
+
+import static tests.locators.Onboarding.*;
+import static tests.locators.Generic.*;
+import static tests.locators.PlayerPage.*;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -27,82 +32,84 @@ public class TestUtilities {
     }
 
     public static void completeOnboardingFlow() {
-        //Onboarding flow
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.fivemobile.thescore:id/txt_welcome"))).isDisplayed();
-        WebElement continueBtn = driver.findElement(By.id("com.fivemobile.thescore:id/btn_primary"));
+        // Onboarding flow
+        wait.until(ExpectedConditions.presenceOfElementLocated(WELCOME_SCREEN_TEXT)).isDisplayed();
+        WebElement continueBtn = driver.findElement(CONTINUE_BUTTON);
         continueBtn.click();
         // Policy Screen
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.fivemobile.thescore:id/accept_button"))).isDisplayed();
-        WebElement acceptPolicyBtn = driver.findElement(By.id("com.fivemobile.thescore:id/accept_button"));
+        wait.until(ExpectedConditions.presenceOfElementLocated(ACCEPT_POLICY_BUTTON)).isDisplayed();
+        WebElement acceptPolicyBtn = driver.findElement(ACCEPT_POLICY_BUTTON);
         acceptPolicyBtn.click();
         // Welcome screen
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.fivemobile.thescore:id/txt_welcome"))).isDisplayed();
-        continueBtn = driver.findElement(By.id("com.fivemobile.thescore:id/btn_primary"));
+        wait.until(ExpectedConditions.presenceOfElementLocated(WELCOME_SCREEN_TEXT)).isDisplayed();
+        continueBtn = driver.findElement(CONTINUE_BUTTON);
         continueBtn.click();
         // League selection
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.fivemobile.thescore:id/title_onboarding"))).isDisplayed();
-        continueBtn = driver.findElement(By.id("com.fivemobile.thescore:id/btn_primary"));
+        wait.until(ExpectedConditions.presenceOfElementLocated(CHOOSE_LEAGUES_TEXT)).isDisplayed();
+        continueBtn = driver.findElement(CONTINUE_BUTTON);
         continueBtn.click();
         // Location permission dialogue
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.fivemobile.thescore:id/location_title"))).isDisplayed();
-        WebElement denyLocationBtn = driver.findElement(By.id("com.fivemobile.thescore:id/btn_disallow"));
+        wait.until(ExpectedConditions.presenceOfElementLocated(LOCATION_PERMISSION_HEADER)).isDisplayed();
+        WebElement denyLocationBtn = driver.findElement(DENY_LOCATION_BUTTON);
         denyLocationBtn.click();
         // Look up team and favorite
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.fivemobile.thescore:id/search_bar_placeholder"))).isDisplayed();
-        WebElement searchBar = driver.findElement(By.id("com.fivemobile.thescore:id/search_bar_placeholder"));
+        wait.until(ExpectedConditions.presenceOfElementLocated(Onboarding.SEARCH_BAR)).isDisplayed();
+        WebElement searchBar = driver.findElement(Onboarding.SEARCH_BAR);
         searchBar.click();
-        searchBar = driver.findElement(By.id("com.fivemobile.thescore:id/search_src_text"));
-        searchBar.sendKeys("Milwaukee Bucks");
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[@resource-id='com.fivemobile.thescore:id/txt_name' and @text='Milwaukee Bucks']"))).isDisplayed();
-        WebElement searchResult = driver.findElement(By.xpath("//android.widget.TextView[@resource-id='com.fivemobile.thescore:id/txt_name' and @text='Milwaukee Bucks']"));
+        searchBar = driver.findElement(ENTER_SEARCH_TEXT);
+        String favTeam = "Milwaukee Bucks";
+        searchBar.sendKeys(favTeam);
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[@resource-id='com.fivemobile.thescore:id/txt_name' and @text='" + favTeam + "']"))).isDisplayed();
+        WebElement searchResult = driver.findElement(By.xpath("//android.widget.TextView[@resource-id='com.fivemobile.thescore:id/txt_name' and @text='" + favTeam + "']"));
         searchResult.click();
         wait.until(ExpectedConditions.attributeToBe(continueBtn, "enabled", "true"));
-        continueBtn = driver.findElement(By.id("com.fivemobile.thescore:id/btn_primary"));
+        continueBtn = driver.findElement(CONTINUE_BUTTON);
         continueBtn.click();
         wait.until(ExpectedConditions.attributeToBe(continueBtn, "enabled", "true"));
-        continueBtn = driver.findElement(By.id("com.fivemobile.thescore:id/btn_primary"));
+        continueBtn = driver.findElement(CONTINUE_BUTTON);
         continueBtn.click();
         // Notifications permission dialogue
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.android.permissioncontroller:id/permission_message"))).isDisplayed();
-        WebElement allowNotificationsBtn = driver.findElement(By.id("com.android.permissioncontroller:id/permission_allow_button"));
+        wait.until(ExpectedConditions.presenceOfElementLocated(NOTIFICATIONS_PERMISSIONS_DIALOGUE)).isDisplayed();
+        WebElement allowNotificationsBtn = driver.findElement(ALLOW_NOTIFICATIONS_BUTTON);
         allowNotificationsBtn.click();
     }
 
     public static void search(String name) {
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.fivemobile.thescore:id/search_bar_text_view"))).isDisplayed();
-        WebElement searchBar = driver.findElement(By.id("com.fivemobile.thescore:id/search_bar_text_view"));
+        wait.until(ExpectedConditions.presenceOfElementLocated(Generic.SEARCH_BAR)).isDisplayed();
+        WebElement searchBar = driver.findElement(Generic.SEARCH_BAR);
         searchBar.click();
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.fivemobile.thescore:id/search_src_text"))).isDisplayed();
-        searchBar = driver.findElement(By.id("com.fivemobile.thescore:id/search_src_text"));
+        wait.until(ExpectedConditions.presenceOfElementLocated(ENTER_SEARCH_TEXT)).isDisplayed();
+        searchBar = driver.findElement(ENTER_SEARCH_TEXT);
         searchBar.sendKeys(name);
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[contains(@text, '" + name + "')]"))).isDisplayed();
         WebElement searchResult = driver.findElement(By.xpath("//android.widget.TextView[contains(@text, '" + name + "')]"));
         searchResult.click();
     }
 
-    public static void verifyNavigateUp() {
-        WebElement navigateUpBtn = driver.findElement(By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']"));
+    public static void verifyBackNavigation(String name) {
+        WebElement navigateUpBtn = driver.findElement(NAVIGATION_BACK_BUTTON);
         navigateUpBtn.click();
-        // TODO: Verify this in a more resilient way
-        softAssert.assertThat(driver.findElement(By.id("com.fivemobile.thescore:id/search_src_text")).isDisplayed()).isTrue();
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[contains(@text, '" + name + "')]"))).isDisplayed();
+        softAssert.assertThat(driver.findElement(By.xpath("//android.widget.TextView[contains(@text, '" + name + "')]")).isDisplayed()).isTrue();
     }
 
     public static void verifyPlayerPageOpened(String name) {
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.id("com.fivemobile.thescore:id/player_header"))).isDisplayed();
-        String playerName = driver.findElement(By.id("com.fivemobile.thescore:id/txt_player_name")).getAttribute("text");
+        wait.until(ExpectedConditions.presenceOfElementLocated(HEADER)).isDisplayed();
+        String playerName = driver.findElement(PLAYER_NAME_TEXT).getAttribute("text");
         softAssert.assertThat(name).isEqualTo(playerName);
     }
 
-    public static void openPlayerInfoTab() {
-        wait.until(ExpectedConditions.presenceOfElementLocated(AppiumBy.accessibilityId("Info")));
-        WebElement infoTab = driver.findElement(AppiumBy.accessibilityId("Info"));
-        infoTab.click();
-        softAssert.assertThat(infoTab.getAttribute("selected")).isEqualTo("true");
+    public static void openPlayerSubTab(By subTab) {
+        wait.until(ExpectedConditions.presenceOfElementLocated(subTab));
+        WebElement selectedSubTab = driver.findElement(subTab);
+        selectedSubTab.click();
+        softAssert.assertThat(selectedSubTab.getAttribute("selected")).isEqualTo("true");
     }
 
+    // TODO: Make adaptive to different players
     public static void verifyPlayerBirthDateAndAge(LocalDate expectedBirthDate) {
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[@resource-id='com.fivemobile.thescore:id/title' and @text='Birth Date']")));
-        String displayedBirthDateAndAge = driver.findElement(By.xpath("//android.widget.TextView[contains(@text, 'Age')]")).getAttribute("text");
+        wait.until(ExpectedConditions.presenceOfElementLocated(BIRTH_DATE_HEADER));
+        String displayedBirthDateAndAge = driver.findElement(AGE_TEXT).getAttribute("text");
         DateTimeFormatter birthDateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate displayedBirthDate = LocalDate.parse(displayedBirthDateAndAge.substring(0, displayedBirthDateAndAge.indexOf(" (")), birthDateFormatter);
         softAssert.assertThat(displayedBirthDate).isEqualTo(expectedBirthDate);
@@ -114,7 +121,7 @@ public class TestUtilities {
     }
 
     public static void verifyPlayerBirthPlace(String expectedBirthPlace) {
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//android.widget.TextView[@resource-id='com.fivemobile.thescore:id/title' and @text='Birth Place']")));
+        wait.until(ExpectedConditions.presenceOfElementLocated(BIRTH_PLACE_HEADER));
         softAssert.assertThat(driver.findElement(By.xpath("//android.widget.TextView[@resource-id='com.fivemobile.thescore:id/value' and @text='"+expectedBirthPlace+"']")).isDisplayed()).isTrue();
     }
 
