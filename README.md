@@ -33,11 +33,17 @@ appium
 ```
 cd ~/IdeaProjects/Test/theScoreTechnicalTask
 ```
-2. On MacOS or linux/unix systems, you may need to run the following command to allow permissions for your device to run the `gradlew` build script
+2. Ensure you are in the main branch of the project
+```
+git branch
+* main
+  pom-structure
+```
+3. On MacOS or linux/unix systems, you may need to run the following command to allow permissions for your device to run the `gradlew` build script
 ```
 chmod +x gradlew
 ```
-3. Run the gradle build command. This will ensure the correct gradle version is being used along with the project dependencies and run the test
+4. Run the gradle build command. This will ensure the correct gradle version is being used along with the project dependencies and run the test
 
 #### MacOS/Linux/Unix
 ```
@@ -47,7 +53,7 @@ chmod +x gradlew
 ```
 ./gradlew.bat build
 ```
-4. You can rerun the tests using the command
+5. You can rerun the tests using the command
 #### MacOS/Linux/Unix
 ```
 ./gradlew test --tests PlayerPageTest
