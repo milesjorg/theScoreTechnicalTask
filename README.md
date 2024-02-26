@@ -109,6 +109,7 @@ Enhances test reporting by capturing multiple failures in a single run.
 
 #### Back Navigation Functionality
 ✅ Validates basic back navigation functionality from the player page to the search results.
+
 ⚠️ Improvement opportunity: Test back navigation functionality from other screens in the app.
 
 #### Soft Assertions
