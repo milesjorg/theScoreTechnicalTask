@@ -1,24 +1,20 @@
 package tests;
 
-import java.util.Arrays;
-import java.util.Collection;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+import tests.utils.SetUp;
+import tests.utils.TearDown;
 
-import static tests.utils.TestUtilities.softAssert;
-import static tests.utils.TestUtilities.setUp;
-import static tests.utils.TestUtilities.tearDown;
-import static tests.utils.TestUtilities.completeOnboardingFlow;
-import static tests.utils.TestUtilities.search;
-import static tests.utils.TestUtilities.verifyPlayerPageOpened;
-import static tests.utils.TestUtilities.openPlayerSubTab;
-import static tests.utils.TestUtilities.verifyPlayerBirthdateAndAge;
-import static tests.utils.TestUtilities.verifyPlayerBirthPlace;
-import static tests.utils.TestUtilities.verifyBackNavigation;
+import java.util.Arrays;
+import java.util.Collection;
+
 import static tests.locators.PlayerPage.INFO_TAB;
+import static tests.utils.Generic.completeOnboardingFlow;
+import static tests.utils.Generic.search;
+import static tests.utils.PlayerPage.*;
+import static tests.utils.SetUp.softAssert;
 
 @RunWith(Parameterized.class)
 public class PlayerPageTest {
@@ -35,7 +31,7 @@ public class PlayerPageTest {
 
     @Parameters
     public static Collection<Object[]> testData() {
-        return Arrays.asList(new Object[][] {
+        return Arrays.asList(new Object[][]{
                 {"Giannis Antetokounmpo", "1994-12-06", "Athens, GRC"},
                 {"Stefanos Tsitsipas", "Aug 12, 1998", "Greece"},
                 {"Tiger Woods", "December 30, 1975", "Cypress, California, United States"}
@@ -44,8 +40,8 @@ public class PlayerPageTest {
 
     @Test
     public void verifyInfoTab() {
-        setUp();
 
+        SetUp.setUp();
         completeOnboardingFlow();
         search(inputPlayerName);
         verifyPlayerPageOpened();
@@ -55,7 +51,6 @@ public class PlayerPageTest {
         verifyBackNavigation(inputPlayerName);
 
         softAssert.assertAll();
-        tearDown();
+        TearDown.tearDown();
     }
-
 }
