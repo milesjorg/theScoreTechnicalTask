@@ -108,7 +108,8 @@ Enhances test reporting by capturing multiple failures in a single run.
 ⚠️ Improvement opportunity: Extend coverage to handle dynamic scenarios with changing data.
 
 #### Back Navigation Functionality
-Validates basic back navigation functionality from the player page to the search results.
+✅ Validates basic back navigation functionality from the player page to the search results.
+⚠️ Improvement opportunity: Test back navigation functionality from other screens in the app.
 
 #### Soft Assertions
 ✅ Provides robust reporting by capturing multiple failures in a single test run.
