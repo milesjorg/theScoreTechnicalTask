@@ -1,5 +1,15 @@
 # theScore QA Mobile Automation Technical Task
 
+## Table of Contents
+- [Introduction](#introduction)
+- [Prerequisites](#prerequisites)
+- [Setup](#setup)
+- [Running Tests](#running-tests)
+- [Test Specification](#test-specification)
+- [Rationale for Test Approach](#rationale-for-test-approach)
+- [Coverage Assessment](#coverage-assessment)
+- [Page Object Model Approach](#page-object-model-approach)
+
 ## Introduction
 This project automates a test in theScore mobile app for android devices. The test consists of opening the app as a first time user, completing the onboarding flow, searching for a player, opening their player page, and verifying that player info is correctly displayed in the info tab of the player page, as well as verifying the back navigation function. It uses a gradle build file using repository dependencies with Java 11 and Appium 2 as the test host. The aim of this project is to serve as a foundation for an automation suite, where future tests can be added to increase test covereage of the app.
 ## Prerequisites
@@ -116,3 +126,6 @@ Enhances test reporting by capturing multiple failures in a single run.
 ✅ Provides robust reporting by capturing multiple failures in a single test run.
 
 ⚠️ Improvement opportunity: Enhance failure messages for improved debugging.
+
+## Page Object Model Approach
+In the other branch in this project (`pom-structure`), I tried to implement a a page object model approach to make abstractions for the methods that would be used for the different pages involved in my testing of the app. This concept provides many benefits, such as modularity of the code for particular pages, readability, reusability, and scalability of the automation suite. I made my best attempts to implement this model, but still faced issues when getting the tests to run. However, I still wanted to include this in the project to show how the implementation was attempted, and possibly to return to it to see where mistakes could be fixed to get it working.
